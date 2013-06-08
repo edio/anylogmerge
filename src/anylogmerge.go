@@ -23,10 +23,6 @@ var inFiles []io.Reader
 var logger = log.New(os.Stderr, "", 0)
 
 func init() {
-	const (
-		defaultSortingKeyRegex = `^(\S+).*`
-	)
-
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stdout, "Usage: %s [OPTION]... [FILE]...\n", os.Args[0])
 		flag.VisitAll(func(f *flag.Flag) {
@@ -38,7 +34,7 @@ func init() {
 		})
 	}
 
-	flag.StringVar(&sortingKeyRegex, "s", defaultSortingKeyRegex, "regular expression with capturing groups indicating sorting key")
+	flag.StringVar(&sortingKeyRegex, "s", "", "regular expression with capturing groups indicating sorting key. The whole line is a key if not set")
 	flag.StringVar(&outFileName, "o", "", "name of the output file. Write to stdout if not set")
 	flag.BoolVar(&forceOverwrite, "f", false, "force overwrite if output file exists (when -o is used)")
 }
@@ -63,6 +59,8 @@ func postInit() {
 		fileFlags := os.O_RDWR | os.O_CREATE
 		if !forceOverwrite {
 			fileFlags |= os.O_EXCL
+		} else {
+			fileFlags |= os.O_TRUNC
 		}
 
 		var err error
@@ -84,6 +82,11 @@ func openFile(name string) io.Reader {
 func main() {
 	postInit()
 
-	merger := logmerge.NewMerger(outFile)
-	merger.Merge(logmerge.LexicographicMinimum, inFiles)
+	var merger *logmerge.Merger
+	if len(sortingKeyRegex) == 0 {
+		merger = logmerge.NewMerger(logmerge.LexicographicOrder, logmerge.DefaultSortKey, outFile)
+	} else {
+		merger = logmerge.NewMerger(logmerge.LexicographicOrder, logmerge.RegexSortKey(sortingKeyRegex), outFile)
+	}
+	merger.Merge(inFiles)
 }

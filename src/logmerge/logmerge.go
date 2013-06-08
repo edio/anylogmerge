@@ -8,7 +8,7 @@ import (
 /* Get index of the smallest string */
 type MinFunc func(keys []string) (index int)
 
-func LexicographicMinimum(keys []string) (index int) {
+func LexicographicOrder(keys []string) (index int) {
 	if len(keys) > 1 {
 		initial := keys[0]
 		for i, k := range keys[1:] {
@@ -21,13 +21,15 @@ func LexicographicMinimum(keys []string) (index int) {
 }
 
 type Merger struct {
-	output io.Writer
+	output  io.Writer
+	order   MinFunc
+	keyFunc SortKeyFunc
 }
 
-func (m *Merger) Merge(minFunc MinFunc, input []io.Reader) {
+func (m *Merger) Merge(input []io.Reader) {
 	scanners := make([]*SortableScanner, len(input))
 	for index, reader := range input {
-		scanners[index] = newScannerDefault(reader)
+		scanners[index] = newScanner(reader, m.keyFunc)
 	}
 
 	for i, s := range scanners {
@@ -38,7 +40,7 @@ func (m *Merger) Merge(minFunc MinFunc, input []io.Reader) {
 	}
 
 	for len(scanners) > 0 {
-		min := minFunc(keys(scanners))
+		min := m.order(keys(scanners))
 		minScanner := scanners[min]
 
 		// push current minscanner to output and re-read line
@@ -67,8 +69,10 @@ func remove(slice []*SortableScanner, index int) []*SortableScanner {
 	return slice
 }
 
-func NewMerger(out io.Writer) *Merger {
+func NewMerger(order MinFunc, keyFunc SortKeyFunc, out io.Writer) *Merger {
 	m := new(Merger)
 	m.output = out
+	m.order = order
+	m.keyFunc = keyFunc
 	return m
 }

@@ -3,6 +3,8 @@ package logmerge
 import (
 	"bufio"
 	"io"
+	"regexp"
+	"strings"
 )
 
 /* Extracts sort key from the whole line */
@@ -11,6 +13,18 @@ type SortKeyFunc func(line string) (key string)
 /* Default sort key is the whole line itself */
 func DefaultSortKey(line string) string {
 	return line
+}
+
+func RegexSortKey(regex string) SortKeyFunc {
+	r := regexp.MustCompile(regex)
+	return func(line string) string {
+		matches := r.FindStringSubmatch(line)
+		if len(matches) > 1 {
+			return strings.Join(matches[1:], "")
+		} else {
+			return ""
+		}
+	}
 }
 
 type SortableScanner struct {
@@ -34,14 +48,6 @@ func (scanner *SortableScanner) readLine() {
 func (scanner *SortableScanner) Line() (line string) {
 	if !scanner.eof {
 		line = scanner.scanner.Text()
-	}
-	return
-}
-
-/* Sort key for current line */
-func (scanner *SortableScanner) SortKey() (key string) {
-	if !scanner.eof {
-		key = scanner.sortKey
 	}
 	return
 }
