@@ -3,7 +3,16 @@ package logmerge
 import (
 	"fmt"
 	"io"
+	"log"
 )
+
+/* Logger to print progress, etc */
+var Logger *log.Logger
+
+/* Print progress every n written lines */
+var LogProgress int
+
+var linesWritten int
 
 /* Get index of the smallest string */
 type MinFunc func(keys []string) (index int)
@@ -46,9 +55,19 @@ func (m *Merger) Merge(input []io.Reader) {
 		// push current minscanner to output and re-read line
 		fmt.Fprintln(m.output, minScanner.Line())
 		minScanner.readLine()
+		if LogProgress > 0 {
+			linesWritten += 1
+			if linesWritten%LogProgress == 0 {
+				Logger.Println("Merged", linesWritten, "lines")
+			}
+		}
 		if minScanner.eof {
 			scanners = remove(scanners, min)
 		}
+	}
+
+	if LogProgress > 0 {
+		Logger.Println("Total", linesWritten, "lines")
 	}
 }
 

@@ -14,6 +14,8 @@ var sortingKeyRegex string
 var inFileNames []string
 var outFileName string
 var forceOverwrite bool
+var beVerbose bool
+var printProgress int
 
 // files
 var outFile io.Writer
@@ -34,9 +36,11 @@ func init() {
 		})
 	}
 
-	flag.StringVar(&sortingKeyRegex, "s", "", "regular expression with capturing groups indicating sorting key. The whole line is a key if not set")
+	flag.StringVar(&sortingKeyRegex, "s", "", "regular expression with capturing groups indicating sorting key. If not set the whole line is a key")
 	flag.StringVar(&outFileName, "o", "", "name of the output file. Write to stdout if not set")
 	flag.BoolVar(&forceOverwrite, "f", false, "force overwrite if output file exists (when -o is used)")
+	flag.BoolVar(&beVerbose, "v", false, "be verbose")
+	flag.IntVar(&printProgress, "p", -1, "log execution progress, print message every N lines")
 }
 
 func postInit() {
@@ -81,6 +85,16 @@ func openFile(name string) io.Reader {
 
 func main() {
 	postInit()
+
+	if beVerbose {
+		logger.Println("Merging files", inFileNames)
+	}
+
+	if beVerbose || (printProgress > 0) {
+		logmerge.Logger = logger
+	}
+	logmerge.LogRegexMatch = beVerbose
+	logmerge.LogProgress = printProgress
 
 	var merger *logmerge.Merger
 	if len(sortingKeyRegex) == 0 {

@@ -7,6 +7,11 @@ import (
 	"strings"
 )
 
+/* Print key regex when matched for first time */
+var LogRegexMatch bool
+
+var regexLogged bool
+
 /* Extracts sort key from the whole line */
 type SortKeyFunc func(line string) (key string)
 
@@ -20,7 +25,12 @@ func RegexSortKey(regex string) SortKeyFunc {
 	return func(line string) string {
 		matches := r.FindStringSubmatch(line)
 		if len(matches) > 1 {
-			return strings.Join(matches[1:], "")
+			key := strings.Join(matches[1:], "")
+			if LogRegexMatch && !regexLogged {
+				Logger.Printf("Matched key example '%s' : '%s'", regex, key)
+				regexLogged = true
+			}
+			return key
 		} else {
 			return ""
 		}
