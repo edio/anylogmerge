@@ -36,7 +36,7 @@ type Merger struct {
 }
 
 func (m *Merger) Merge(input []io.Reader) {
-	scanners := make([]*SortableScanner, len(input))
+	scanners := make([]*sortableScanner, len(input))
 	for index, reader := range input {
 		scanners[index] = newScanner(reader, m.keyFunc)
 	}
@@ -71,7 +71,7 @@ func (m *Merger) Merge(input []io.Reader) {
 	}
 }
 
-func keys(scanners []*SortableScanner) []string {
+func keys(scanners []*sortableScanner) []string {
 	keys := make([]string, len(scanners))
 	for i, s := range scanners {
 		keys[i] = s.sortKey
@@ -79,7 +79,7 @@ func keys(scanners []*SortableScanner) []string {
 	return keys
 }
 
-func remove(slice []*SortableScanner, index int) []*SortableScanner {
+func remove(slice []*sortableScanner, index int) []*sortableScanner {
 	if index == len(slice)-1 {
 		slice[len(slice)-1], slice = nil, slice[:len(slice)-1]
 	} else {

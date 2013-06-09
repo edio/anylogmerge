@@ -40,7 +40,7 @@ func Test_readLine(t *testing.T) {
 	if scanner.Line() != "foo" {
 		t.Errorf("Wrong result. Expected '%s', got '%s'\n", "foo", scanner.Line())
 	}
-	if scanner.SortKey() != "f" {
+	if scanner.sortKey != "f" {
 		t.Errorf("Wrong result. Expected '%s', got '%s'\n", "f", scanner.Line())
 	}
 
@@ -52,7 +52,7 @@ func Test_readLine(t *testing.T) {
 	if scanner.Line() != "bar" {
 		t.Errorf("Wrong result. Expected '%s', got '%s'\n", "bar", scanner.Line())
 	}
-	if scanner.SortKey() != "b" {
+	if scanner.sortKey != "b" {
 		t.Errorf("Wrong result. Expected '%s', got '%s'\n", "b", scanner.Line())
 	}
 }

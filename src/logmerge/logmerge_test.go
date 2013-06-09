@@ -5,11 +5,11 @@ import (
 )
 
 func Test_remove(t *testing.T) {
-	slice := []*SortableScanner{
-		&SortableScanner{sortKey: "1"},
-		&SortableScanner{sortKey: "2"},
-		&SortableScanner{sortKey: "3"},
-		&SortableScanner{sortKey: "4"},
+	slice := []*sortableScanner{
+		&sortableScanner{sortKey: "1"},
+		&sortableScanner{sortKey: "2"},
+		&sortableScanner{sortKey: "3"},
+		&sortableScanner{sortKey: "4"},
 	}
 
 	s := remove(slice, 2)
@@ -23,11 +23,11 @@ func Test_remove(t *testing.T) {
 }
 
 func Test_remove_first(t *testing.T) {
-	slice := []*SortableScanner{
-		&SortableScanner{sortKey: "1"},
-		&SortableScanner{sortKey: "2"},
-		&SortableScanner{sortKey: "3"},
-		&SortableScanner{sortKey: "4"},
+	slice := []*sortableScanner{
+		&sortableScanner{sortKey: "1"},
+		&sortableScanner{sortKey: "2"},
+		&sortableScanner{sortKey: "3"},
+		&sortableScanner{sortKey: "4"},
 	}
 
 	s := remove(slice, 0)
@@ -41,11 +41,11 @@ func Test_remove_first(t *testing.T) {
 }
 
 func Test_remove_last(t *testing.T) {
-	slice := []*SortableScanner{
-		&SortableScanner{sortKey: "1"},
-		&SortableScanner{sortKey: "2"},
-		&SortableScanner{sortKey: "3"},
-		&SortableScanner{sortKey: "4"},
+	slice := []*sortableScanner{
+		&sortableScanner{sortKey: "1"},
+		&sortableScanner{sortKey: "2"},
+		&sortableScanner{sortKey: "3"},
+		&sortableScanner{sortKey: "4"},
 	}
 
 	s := remove(slice, 3)
@@ -56,8 +56,8 @@ func Test_remove_last(t *testing.T) {
 }
 
 func Test_remove_one(t *testing.T) {
-	slice := []*SortableScanner{
-		&SortableScanner{sortKey: "1"},
+	slice := []*sortableScanner{
+		&sortableScanner{sortKey: "1"},
 	}
 
 	s := remove(slice, 0)
