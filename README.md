@@ -79,7 +79,7 @@ Moreover, some log entries can take several lines and we want such entries appea
 
 So we have to define regular expression to extract date from the log
 
-    ^\[A-Z]+\ ([0-9\/]+)\ ([0-9\:]+).*$
+    ^[A-Z]+\ ([0-9\/]+)\ ([0-9\:]+).*$
 
 This regular expression has 2 capturing groups that define comparing key. Thus generic log entry with the expression above will be compared by key *2012/12/3123:59:59*.
 What is also great, is that unmatched log entries will have empty string key. Empty string is lexicographically less than the other strings, so unmatched log entries are passed to output in the first place.
