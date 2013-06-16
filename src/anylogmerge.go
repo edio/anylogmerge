@@ -37,8 +37,8 @@ func init() {
 		})
 	}
 
-	flag.StringVar(&sortingKeyRegex, "s", "", "regular expression with capturing groups indicating sorting key. If -s or -c is not used, the whole line is a key. Not compatible with -c")
-	flag.StringVar(&sortingKeyColumns, "c", "", "columns to use as a sorting key. If -s or -c is not used, the whole line is a key. Not compatible with -s. Example:\":4,6:24\"")
+	flag.StringVar(&sortingKeyRegex, "s", "", "regular expression with capturing groups indicating comparing key. If -s or -c is not used, the whole line is a key. Not compatible with -c")
+	flag.StringVar(&sortingKeyColumns, "c", "", "columns to use as a comparing key. If -s or -c is not used, the whole line is a key. Not compatible with -s. Example:\":4,6:24\"")
 	flag.StringVar(&outFileName, "o", "", "name of the output file. Write to stdout if not set")
 	flag.BoolVar(&forceOverwrite, "f", false, "force overwrite if output file exists (when -o is used)")
 	flag.BoolVar(&beVerbose, "v", false, "be verbose")
