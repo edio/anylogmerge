@@ -11,6 +11,7 @@ import (
 
 // flags
 var sortingKeyRegex string
+var sortingKeyColumns string
 var inFileNames []string
 var outFileName string
 var forceOverwrite bool
@@ -36,7 +37,8 @@ func init() {
 		})
 	}
 
-	flag.StringVar(&sortingKeyRegex, "s", "", "regular expression with capturing groups indicating sorting key. If not set the whole line is a key")
+	flag.StringVar(&sortingKeyRegex, "s", "", "regular expression with capturing groups indicating sorting key. If -s or -c is not used, the whole line is a key. Not compatible with -c")
+	flag.StringVar(&sortingKeyColumns, "c", "", "columns to use as a sorting key. If -s or -c is not used, the whole line is a key. Not compatible with -s. Example:\":4,6:24\"")
 	flag.StringVar(&outFileName, "o", "", "name of the output file. Write to stdout if not set")
 	flag.BoolVar(&forceOverwrite, "f", false, "force overwrite if output file exists (when -o is used)")
 	flag.BoolVar(&beVerbose, "v", false, "be verbose")
@@ -45,6 +47,11 @@ func init() {
 
 func postInit() {
 	flag.Parse()
+
+	if len(sortingKeyColumns) > 0 && len(sortingKeyRegex) > 0 {
+		logger.Fatal("-s and -c are mutually exclusive. Specify one of them")
+	}
+
 	inFileNames = flag.Args()
 
 	if len(inFileNames) < 2 {
@@ -97,10 +104,14 @@ func main() {
 	logmerge.LogProgress = printProgress
 
 	var merger *logmerge.Merger
-	if len(sortingKeyRegex) == 0 {
-		merger = logmerge.NewMerger(logmerge.LexicographicOrder, logmerge.DefaultSortKey, outFile)
-	} else {
+
+	if len(sortingKeyRegex) > 0 {
 		merger = logmerge.NewMerger(logmerge.LexicographicOrder, logmerge.RegexSortKey(sortingKeyRegex), outFile)
+	} else if len(sortingKeyColumns) > 0 {
+		merger = logmerge.NewMerger(logmerge.LexicographicOrder, logmerge.ColumnSortKey(sortingKeyColumns), outFile)
+	} else {
+		merger = logmerge.NewMerger(logmerge.LexicographicOrder, logmerge.DefaultSortKey, outFile)
 	}
+
 	merger.Merge(inFiles)
 }

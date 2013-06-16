@@ -20,7 +20,7 @@ func ColumnSortKey(columnSpec string) SortKeyFunc {
 			start := column[0]
 			end := column[1]
 
-			if start >= len(str) {
+			if start >= len(line) {
 				continue
 			}
 
