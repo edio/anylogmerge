@@ -124,7 +124,21 @@ Regex mode is much slower, and merging the same files takes about 20 seconds to 
 anylogmerge is written in Go, so you need one to build the tool.
 I'll provide some building script to simplify building for those, who are not familiar with Go.
 
+For now, only brief building instructions.
+
+1. git clone project to local directory
+2. cd to directory where you have cloned the project
+3. build
+
+    $ export GOPATH=`pwd`
+    $ go install logmerge
+    $ go build src/anylogmerge.go
+
 # Why Go
 
 Because I'm trying to learn Go.
+
+# License
+
+GPLv3
 
