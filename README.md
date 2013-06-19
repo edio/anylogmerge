@@ -97,12 +97,10 @@ For example while merging 2 ~50MB files in different modes, the following result
 
     $ time anylogmerge -v -f -o ~/tmp/logs/merged.log ~/tmp/logs/app-all.*.log                         
     Merging files [/home/edio/tmp/logs/app-all.node-155.log /home/edio/tmp/logs/app-all.node-156.log]
-    Matched key example '^\w+\ (\S+)\ (\S+).*$' : '2013/06/0623:09:46:192'
     anylogmerge -v -f -o ~/tmp/logs/merged.log   0.92s user 1.49s system 83% cpu 3.010 total
 
     $ time anylogmerge -c "6:30" -v -f -o ~/tmp/logs/merged.log ~/tmp/logs/app-all.*.log                         
     Merging files [/home/edio/tmp/logs/app-all.node-155.log /home/edio/tmp/logs/app-all.node-156.log]
-    Matched key example '^\w+\ (\S+)\ (\S+).*$' : '2013/06/0623:09:46:192'
     anylogmerge -c "6:30" -v -f -o ~/tmp/logs/merged.log   1.02s user 1.50s system 84% cpu 2.972 total
 
     $ time anylogmerge -s "^\w+\ (\S+)\ (\S+).*$" -v -f -o ~/tmp/logs/merged.log ~/tmp/logs/app-all.*.log                         
